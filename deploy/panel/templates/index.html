@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel ETL · Retail</title>
-  <link rel="stylesheet" href="/static/estilos.css?v=2">
+  <link rel="stylesheet" href="/static/estilos.css?v=3">
 </head>
 <body>
   <header class="cabecera">
@@ -52,6 +52,7 @@
         <div class="botones">
           <button id="btn-ejecutar" class="btn btn-primario">▶ Ejecutar ETL</button>
           <button id="btn-validar" class="btn btn-secundario">Validar base</button>
+          <button id="btn-limpiar" class="btn btn-peligro">Limpiar base</button>
           <button id="btn-cancelar" class="btn btn-peligro" hidden>Cancelar</button>
         </div>
       </div>
@@ -107,6 +108,7 @@
         <li><strong>Caché local:</strong> usa los archivos ya descargados en <code>data/raw</code>. Es la opción rápida para probar el pipeline.</li>
         <li><strong>Completo:</strong> borra <code>data/raw</code> y vuelve a descargar Kaggle, classicmodels y el Banco Mundial. Necesita credenciales de Kaggle.</li>
         <li><strong>Validar base:</strong> ejecuta los 36 controles de <code>sql/05_validaciones.sql</code> sobre la base ya cargada.</li>
+        <li><strong>Limpiar base:</strong> elimina los esquemas <code>stg</code>, <code>core</code>, <code>bi</code>, <code>analisis</code> y <code>meta</code>. La próxima ejecución del ETL los vuelve a crear. Pide confirmación antes de borrar.</li>
         <li><strong>Abrir página web:</strong> lleva al sitio estático del proyecto (contenedor <code>web</code>).</li>
       </ul>
       <p class="tenue">El ETL recrea los esquemas <code>stg</code>, <code>core</code> y <code>bi</code> en cada corrida. La carga es transaccional: si falla, no deja datos a medias.</p>
@@ -118,6 +120,23 @@
     <span id="version-base"></span>
   </footer>
 
-  <script src="/static/app.js?v=2"></script>
+  <dialog id="modal-limpiar" class="modal">
+    <h3>Limpiar la base de datos</h3>
+    <p>
+      Se eliminarán los esquemas <code>stg</code>, <code>core</code>, <code>bi</code>,
+      <code>analisis</code> y <code>meta</code>. La próxima ejecución del ETL los vuelve a crear.
+    </p>
+    <p class="tenue">La página web seguirá mostrando las cifras anteriores hasta que vuelvas a cargar la base.</p>
+    <div class="modal-campo">
+      <label for="confirmar-limpiar">Escribe <strong>LIMPIAR</strong> para confirmar</label>
+      <input id="confirmar-limpiar" autocomplete="off" spellcheck="false" placeholder="LIMPIAR">
+    </div>
+    <div class="modal-acciones">
+      <button type="button" id="cancelar-limpiar" class="btn btn-secundario">Cancelar</button>
+      <button type="button" id="confirmar-limpiar-btn" class="btn btn-peligro" disabled>Limpiar base</button>
+    </div>
+  </dialog>
+
+  <script src="/static/app.js?v=3"></script>
 </body>
 </html>

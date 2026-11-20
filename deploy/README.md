@@ -48,6 +48,15 @@ dominio o la IP reales.
 Al terminar, el panel muestra el conteo de controles OK/ERROR y el estado de la
 base. El log queda en `data/logs/etl_*.log` y se puede descargar desde el panel.
 
+### Botones del panel
+
+- **Ejecutar ETL**: corre el pipeline completo o reutiliza el caché de `data/raw`.
+- **Validar base**: ejecuta los 36 controles sobre la base ya cargada.
+- **Limpiar base**: elimina `stg`, `core`, `bi`, `analisis` y `meta` (pide
+  escribir `LIMPIAR` para confirmar). La siguiente ejecución del ETL vuelve a
+  crear todo. La web no se actualiza sola: sigue mostrando la última foto hasta
+  que exportes y reconstruyas, o hasta que vuelvas a correr el ETL y la web.
+
 ### Comandos útiles
 
 ```bash
@@ -187,6 +196,7 @@ deploy/
 │   ├── requirements.txt
 │   ├── app.py             # API y página del panel
 │   ├── runner_etl.py      # ejecuta completo / caché / validar
+│   ├── limpiar.sql        # borra los esquemas desde el botón "Limpiar base"
 │   ├── templates/         # interfaz
 │   └── static/            # CSS y JS
 └── web/

@@ -29,6 +29,7 @@ ENV_FILE = BASE_DIR / "config" / ".env"
 LOG_DIR = BASE_DIR / "data" / "logs"
 RUNNER = PANEL_DIR / "runner_etl.py"
 PBX_FILE = BASE_DIR / "powerbi" / "proyecto_herramientas_v2.pbix"
+LIMPIAR_SQL = PANEL_DIR / "limpiar.sql"
 WEB_URL = os.environ.get("WEB_URL", "http://localhost:8080").rstrip("/")
 
 PG_KEYS = ("PG_HOST", "PG_PORT", "PG_DB", "PG_USER", "PG_PASSWORD")
@@ -137,6 +138,10 @@ class Peticion(BaseModel):
     modo: str = "cache"
 
 
+class Limpieza(BaseModel):
+    confirmar: str = ""
+
+
 def _leer_proceso(proceso: subprocess.Popen, ruta_log: Path, job_id: str) -> None:
     global PROCESO
     try:
@@ -236,6 +241,8 @@ def estado_base():
                 "utilidad": float(utilidad) if utilidad is not None else None,
                 "ultima_extraccion": ultima.isoformat() if ultima else None,
             }
+    except psycopg.errors.UndefinedTable:
+        return {"ok": False, "vacia": True, "error": None}
     except Exception as error:  # noqa: BLE001
         return {"ok": False, "error": str(error)}
 
@@ -331,6 +338,31 @@ def cancelar():
 
     threading.Thread(target=forzar, daemon=True).start()
     return {"ok": True, "mensaje": "Cancelación solicitada."}
+
+
+@app.post("/api/limpiar")
+def limpiar(peticion: Limpieza):
+    """Elimina los esquemas del ETL. Requiere confirmar escribiendo LIMPIAR."""
+    if peticion.confirmar.strip().upper() != "LIMPIAR":
+        raise HTTPException(400, 'Escribe "LIMPIAR" para confirmar la limpieza.')
+
+    with LOCK:
+        if PROCESO is not None and PROCESO.poll() is None:
+            raise HTTPException(409, "Hay un ETL en ejecución. Espera a que termine o cancélalo.")
+
+    if not LIMPIAR_SQL.exists():
+        raise HTTPException(500, "No se encontró deploy/panel/limpiar.sql.")
+
+    try:
+        with conexion() as con, con.cursor() as cur:
+            cur.execute(LIMPIAR_SQL.read_text(encoding="utf-8"))
+    except Exception as error:  # noqa: BLE001
+        raise HTTPException(500, f"No se pudo limpiar la base: {error}") from error
+
+    return {
+        "ok": True,
+        "mensaje": "Base limpiada: se eliminaron los esquemas bi, core, stg, analisis y meta.",
+    }
 
 
 @app.get("/api/estado")

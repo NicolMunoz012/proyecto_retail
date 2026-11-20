@@ -379,6 +379,41 @@ select:focus { outline: 2px solid var(--salmon); outline-offset: 1px; }
 .nota li::marker { color: var(--salmon); }
 .nota strong { color: var(--texto); font-weight: 600; }
 
+dialog.modal {
+  width: min(470px, calc(100vw - 32px));
+  padding: 24px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  color: var(--texto);
+}
+dialog.modal::backdrop { background: rgba(0, 0, 0, 0.68); }
+dialog.modal h3 {
+  margin-bottom: 10px;
+  font-size: 1.15rem;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  color: var(--texto);
+}
+dialog.modal p { margin-bottom: 8px; color: var(--texto-2); font-size: 0.9375rem; }
+dialog.modal strong { color: var(--texto); }
+
+.modal-campo { display: grid; gap: 8px; margin-top: 18px; }
+.modal-campo label { font-size: 0.8125rem; color: var(--texto-2); }
+.modal-campo input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--linea);
+  border-radius: 6px;
+  background: #171717;
+  color: var(--texto);
+  font: inherit;
+  letter-spacing: 0.08em;
+}
+.modal-campo input:focus { outline: 2px solid var(--salmon); outline-offset: 1px; }
+
+.modal-acciones { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
+
 footer {
   max-width: var(--ancho);
   margin: 0 auto;

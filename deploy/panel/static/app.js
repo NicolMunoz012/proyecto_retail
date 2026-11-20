@@ -1,7 +1,12 @@
 const $ = (id) => document.getElementById(id);
 const consola = $("log");
 const barra = $("barra");
-const botones = { ejecutar: $("btn-ejecutar"), validar: $("btn-validar"), cancelar: $("btn-cancelar") };
+const botones = {
+  ejecutar: $("btn-ejecutar"),
+  validar: $("btn-validar"),
+  limpiar: $("btn-limpiar"),
+  cancelar: $("btn-cancelar"),
+};
 const modo = $("modo");
 
 let desde = 0;
@@ -113,6 +118,7 @@ function pintarEstado(estado) {
     enEjecucion = corriendo;
     botones.ejecutar.disabled = corriendo;
     botones.validar.disabled = corriendo;
+    botones.limpiar.disabled = corriendo;
     botones.cancelar.hidden = !corriendo;
     modo.disabled = corriendo;
   }
@@ -142,15 +148,20 @@ function fila(nombre, valor) {
   return `<div class="fila-dato"><span>${nombre}</span><strong>${valor}</strong></div>`;
 }
 
-async function cargarBase() {
+async function consultarBase() {
   const contenedor = $("base-datos");
   try {
     const respuesta = await fetch("/api/base", { cache: "no-store" });
     const datos = await respuesta.json();
     const punto = $("base-punto");
     if (!datos.ok) {
-      punto.className = "punto mini error";
-      contenedor.innerHTML = `<p class="tenue">Sin conexión o sin tablas cargadas.</p><p class="tenue">${datos.error || ""}</p>`;
+      if (datos.vacia) {
+        punto.className = "punto mini inactivo";
+        contenedor.innerHTML = '<p class="tenue">La base está vacía. Ejecuta el ETL para cargarla.</p>';
+      } else {
+        punto.className = "punto mini error";
+        contenedor.innerHTML = `<p class="tenue">Sin conexión o sin tablas cargadas.</p><p class="tenue">${datos.error || ""}</p>`;
+      }
       return;
     }
     punto.className = "punto mini completado";
@@ -171,9 +182,12 @@ async function cargarBase() {
   } catch (error) {
     $("base-punto").className = "punto mini error";
     contenedor.innerHTML = '<p class="tenue">No se pudo consultar la base.</p>';
-  } finally {
-    setTimeout(cargarBase, 6000);
   }
+}
+
+async function cargarBase() {
+  await consultarBase();
+  setTimeout(cargarBase, 6000);
 }
 
 function mostrarAviso(texto, esError = false) {
@@ -253,6 +267,60 @@ async function lanzar(nombreModo) {
 
 botones.ejecutar.addEventListener("click", () => lanzar(modo.value));
 botones.validar.addEventListener("click", () => lanzar("validar"));
+const modalLimpiar = $("modal-limpiar");
+const entradaLimpiar = $("confirmar-limpiar");
+const botonConfirmarLimpiar = $("confirmar-limpiar-btn");
+
+function abrirModalLimpiar() {
+  entradaLimpiar.value = "";
+  botonConfirmarLimpiar.disabled = true;
+  modalLimpiar.showModal();
+  entradaLimpiar.focus();
+}
+
+async function limpiarBase(texto) {
+  botones.limpiar.disabled = true;
+  try {
+    const respuesta = await fetch("/api/limpiar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ confirmar: texto }),
+    });
+    const datos = await respuesta.json().catch(() => ({}));
+    if (!respuesta.ok) {
+      mostrarAviso(datos.detail || "No se pudo limpiar la base.", true);
+      return;
+    }
+    mostrarAviso(datos.mensaje || "Base limpiada.", false);
+    await consultarBase();
+  } catch (error) {
+    console.error(error);
+    mostrarAviso("No se pudo contactar con el panel.", true);
+  } finally {
+    botones.limpiar.disabled = false;
+  }
+}
+
+entradaLimpiar.addEventListener("input", () => {
+  botonConfirmarLimpiar.disabled = entradaLimpiar.value.trim().toUpperCase() !== "LIMPIAR";
+});
+
+entradaLimpiar.addEventListener("keydown", (evento) => {
+  if (evento.key === "Enter" && !botonConfirmarLimpiar.disabled) {
+    evento.preventDefault();
+    botonConfirmarLimpiar.click();
+  }
+});
+
+$("cancelar-limpiar").addEventListener("click", () => modalLimpiar.close());
+
+botonConfirmarLimpiar.addEventListener("click", () => {
+  const texto = entradaLimpiar.value.trim();
+  modalLimpiar.close();
+  limpiarBase(texto);
+});
+
+botones.limpiar.addEventListener("click", abrirModalLimpiar);
 botones.cancelar.addEventListener("click", async () => {
   botones.cancelar.disabled = true;
   try {
