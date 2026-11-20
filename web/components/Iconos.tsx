@@ -55,3 +55,44 @@ export function Descarga({ className, size = 14 }: IconoProps) {
     </svg>
   );
 }
+
+export function BaseDatos({ className, size = 18 }: IconoProps) {
+  return (
+    <svg {...base} width={size} height={size} className={className}>
+      <ellipse cx="12" cy="5" rx="9" ry="3" />
+      <path d="M3 5v14a9 3 0 0 0 18 0V5" />
+      <path d="M3 12a9 3 0 0 0 18 0" />
+    </svg>
+  );
+}
+
+export function Flujo({ className, size = 18 }: IconoProps) {
+  return (
+    <svg {...base} width={size} height={size} className={className}>
+      <rect width="8" height="8" x="3" y="3" rx="2" />
+      <path d="M7 11v4a2 2 0 0 0 2 2h4" />
+      <rect width="8" height="8" x="13" y="13" rx="2" />
+    </svg>
+  );
+}
+
+export function Capas({ className, size = 18 }: IconoProps) {
+  return (
+    <svg {...base} width={size} height={size} className={className}>
+      <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+      <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+      <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+    </svg>
+  );
+}
+
+export function Barras({ className, size = 18 }: IconoProps) {
+  return (
+    <svg {...base} width={size} height={size} className={className}>
+      <path d="M3 3v18h18" />
+      <path d="M18 17V9" />
+      <path d="M13 17V5" />
+      <path d="M8 17v-3" />
+    </svg>
+  );
+}
