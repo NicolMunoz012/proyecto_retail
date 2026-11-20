@@ -132,6 +132,45 @@ Sí. El proyecto ya está contenerizado y probado localmente. Alternativas:
 6. Si el ETL se vuelve recurrente, prográmalo con cron/systemd timer y deja el
    panel solo para consulta.
 
+## Despliegue en Dokploy
+
+El repositorio es público, así que Dokploy puede clonarlo sin credenciales.
+Usa el compose de producción que está en la raíz del repo:
+
+```text
+docker-compose.dokploy.yml
+```
+
+1. En Dokploy: **Project → Create Service → Compose**.
+2. **Provider:** `Git` (no hace falta instalar la GitHub App).
+   - Repository: `https://github.com/NicolMunoz012/proyecto_retail.git`
+   - Branch: `develop` (o `feature/despliegue` mientras el PR no esté unido).
+   - Compose Path: `./docker-compose.dokploy.yml`
+3. **Environment:** define
+   ```text
+   PG_DB=retail_bi
+   PG_USER=retail_etl
+   PG_PASSWORD=<clave larga>
+   WEB_URL=https://<dominio-de-la-web>
+   KAGGLE_USERNAME=<usuario>
+   KAGGLE_KEY=<token>
+   ```
+4. **Domains:**
+   - `etl.tudominio.com` → servicio `panel`, puerto `8000`
+   - `retail.tudominio.com` → servicio `web`, puerto `80`
+5. Apunta los registros DNS `A` al servidor y despliega.
+
+Notas:
+
+- El volumen `etldata` guarda `data/raw`, `data/staging` y los logs entre
+  despliegues. En el primer arranque está vacío; ejecuta el ETL en modo
+  **Completo** desde el panel (necesita Kaggle) o sube el caché al volumen.
+- El compose de Dokploy no publica el puerto de PostgreSQL: la base solo es
+  accesible desde los contenedores.
+- **Auto-deploy:** el webhook de GitHub solo lo puede agregar la dueña del repo
+  (Nicol), porque hace falta permiso de administración. Si no lo agrega,
+  despliega manualmente desde Dokploy después de cada push.
+
 ## Estructura de `deploy/`
 
 ```text
