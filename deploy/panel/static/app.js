@@ -334,6 +334,13 @@ consola.addEventListener("scroll", () => {
   autoScroll = consola.scrollTop + consola.clientHeight >= consola.scrollHeight - 40;
 });
 
+const modalAyuda = $("modal-ayuda");
+$("btn-ayuda").addEventListener("click", () => modalAyuda.showModal());
+$("cerrar-ayuda").addEventListener("click", () => modalAyuda.close());
+modalAyuda.addEventListener("click", (evento) => {
+  if (evento.target === modalAyuda) modalAyuda.close();
+});
+
 const botonTema = $("btn-tema");
 
 function temaActual() {

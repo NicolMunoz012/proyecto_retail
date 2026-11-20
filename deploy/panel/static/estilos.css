@@ -375,8 +375,8 @@ select:focus { outline: 2px solid var(--salmon); outline-offset: 1px; }
 
 .consola {
   margin: 0;
-  min-height: 260px;
-  max-height: 430px;
+  min-height: clamp(380px, 52vh, 660px);
+  max-height: 72vh;
   overflow: auto;
   padding: 16px;
   border-radius: 6px;
@@ -427,6 +427,23 @@ dialog.modal h3 {
 }
 dialog.modal p { margin-bottom: 8px; color: var(--texto-2); font-size: 0.9375rem; }
 dialog.modal strong { color: var(--texto); }
+
+.modal-ayuda {
+  width: min(620px, calc(100vw - 32px));
+  max-height: min(82vh, 720px);
+  overflow: auto;
+}
+
+.modal-ayuda ul {
+  display: grid;
+  gap: 10px;
+  margin: 4px 0 14px;
+  padding-left: 18px;
+  color: var(--texto-2);
+  font-size: 0.9375rem;
+}
+.modal-ayuda li::marker { color: var(--salmon); }
+.modal-ayuda strong { color: var(--texto); }
 
 .modal-campo { display: grid; gap: 8px; margin-top: 18px; }
 .modal-campo label { font-size: 0.8125rem; color: var(--texto-2); }
