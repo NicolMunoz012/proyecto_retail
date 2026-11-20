@@ -48,6 +48,13 @@ dominio o la IP reales.
 Al terminar, el panel muestra el conteo de controles OK/ERROR y el estado de la
 base. El log queda en `data/logs/etl_*.log` y se puede descargar desde el panel.
 
+### Tema claro y oscuro
+
+La página web y el panel arrancan en **tema claro**. El botón de sol/luna del
+encabezado alterna el tema y guarda la preferencia en `localStorage`, así que se
+mantiene al recargar. Los boxplots del ANOVA tienen una versión clara en
+`web/public/anova/*_claro_boxplot.png` y la web elige la imagen según el tema.
+
 ### Botones del panel
 
 - **Ejecutar ETL**: corre el pipeline completo o reutiliza el caché de `data/raw`.

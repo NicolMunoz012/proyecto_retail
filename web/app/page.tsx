@@ -1,4 +1,5 @@
 import Anova from "@/components/Anova";
+import { Descarga, EnlaceExterno } from "@/components/Iconos";
 import GraficoMeses from "@/components/GraficoMeses";
 import GraficoRegiones from "@/components/GraficoRegiones";
 import {
@@ -171,7 +172,7 @@ export default function Pagina() {
         </div>
         <p className="dashboard__pie">
           <a href={POWERBI_URL} target="_blank" rel="noopener">
-            Abrir en pantalla completa ↗
+            Abrir en pantalla completa <EnlaceExterno />
           </a>
           <span className="solo-movil">En el celular se lee mejor en pantalla completa.</span>
         </p>
@@ -190,9 +191,11 @@ export default function Pagina() {
 
         <p className="cierre__enlaces">
           <a href={REPO_URL} target="_blank" rel="noopener">
-            Ver el código ↗
+            Ver el código <EnlaceExterno />
           </a>
-          <a href={PBIX_URL}>Descargar el .pbix</a>
+          <a href={PBIX_URL}>
+            <Descarga /> Descargar el .pbix
+          </a>
         </p>
         <p className="nota">Cifras generadas desde PostgreSQL el {datos.generado.split("-").reverse().join("/")}.</p>
       </footer>

@@ -49,6 +49,7 @@ body {
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 h1, h2, h3 {
@@ -227,6 +228,35 @@ select:focus { outline: 2px solid var(--salmon); outline-offset: 1px; }
 .btn-peligro:hover:not(:disabled) { background: var(--vino-suave); border-color: var(--vino); }
 
 .btn-secundario { color: var(--texto); }
+
+.btn svg { width: 16px; height: 16px; flex: none; }
+
+.btn-tema {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  padding: 0;
+  border: 1px solid var(--linea);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--texto-2);
+  cursor: pointer;
+  transition: background-color 250ms ease, border-color 250ms ease, color 250ms ease;
+}
+
+.btn-tema:hover {
+  color: var(--texto);
+  border-color: var(--barra);
+  background: var(--superficie-2);
+}
+
+.btn-tema .icono-sol,
+.btn-tema .icono-luna { display: none; }
+
+[data-tema="claro"] .btn-tema .icono-luna { display: block; }
+[data-tema="oscuro"] .btn-tema .icono-sol { display: block; }
 
 .aviso {
   padding: 10px 14px;
@@ -446,4 +476,58 @@ footer {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Tema claro */
+:root[data-tema="claro"] {
+  color-scheme: light;
+  --fondo: #faf7f2;
+  --superficie: #ffffff;
+  --superficie-2: #f2ece4;
+  --texto: #1d1b19;
+  --texto-2: #6f675f;
+  --salmon: #a05f2c;
+  --rosa: #b85c66;
+  --vino: #9e3d47;
+  --linea: #e2dbd2;
+  --barra: #a39a90;
+  --salmon-suave: rgba(160, 95, 44, 0.10);
+  --vino-suave: rgba(158, 61, 71, 0.08);
+}
+
+[data-tema="claro"] code { background: #f1ebe3; }
+[data-tema="claro"] select,
+[data-tema="claro"] .modal-campo input { background: #fffdfa; }
+
+[data-tema="claro"] .btn-primario:hover:not(:disabled) {
+  background: #8f5226;
+  border-color: #8f5226;
+}
+
+[data-tema="claro"] .btn-peligro {
+  border-color: rgba(158, 61, 71, 0.45);
+  color: var(--vino);
+}
+
+[data-tema="claro"] .aviso { border-color: rgba(160, 95, 44, 0.35); }
+[data-tema="claro"] .aviso.error { border-color: rgba(158, 61, 71, 0.45); }
+[data-tema="claro"] .barra { background: #e9e2d9; }
+[data-tema="claro"] .pasos li.activo { border-color: rgba(160, 95, 44, 0.28); }
+[data-tema="claro"] .pasos li.hecho span { border-color: rgba(160, 95, 44, 0.55); }
+
+[data-tema="claro"] .consola {
+  background: #f3eee7;
+  color: #2a2724;
+}
+
+[data-tema="claro"] dialog.modal::backdrop { background: rgba(29, 27, 25, 0.35); }
+
+[data-tema="claro"] .tarjeta {
+  box-shadow: 0 1px 2px rgba(29, 27, 25, 0.04);
+}
+
+[data-tema="claro"] .consola .error,
+[data-tema="claro"] .consola .aviso,
+[data-tema="claro"] .aviso.error {
+  color: var(--vino);
 }

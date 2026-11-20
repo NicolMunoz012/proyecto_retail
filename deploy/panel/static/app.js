@@ -334,6 +334,30 @@ consola.addEventListener("scroll", () => {
   autoScroll = consola.scrollTop + consola.clientHeight >= consola.scrollHeight - 40;
 });
 
+const botonTema = $("btn-tema");
+
+function temaActual() {
+  return document.documentElement.getAttribute("data-tema") === "oscuro" ? "oscuro" : "claro";
+}
+
+function aplicarTema(tema) {
+  document.documentElement.setAttribute("data-tema", tema);
+  try {
+    localStorage.setItem("tema-panel", tema);
+  } catch {
+    // El panel sigue funcionando aunque el navegador bloquee el almacenamiento.
+  }
+  const etiqueta = tema === "claro" ? "Cambiar a tema oscuro" : "Cambiar a tema claro";
+  botonTema.setAttribute("aria-label", etiqueta);
+  botonTema.title = etiqueta;
+}
+
+botonTema.addEventListener("click", () => {
+  aplicarTema(temaActual() === "claro" ? "oscuro" : "claro");
+});
+
+aplicarTema(temaActual());
+
 fetch("/api/salud")
   .then((r) => r.json())
   .then((datos) => {

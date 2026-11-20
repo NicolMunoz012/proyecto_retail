@@ -12,11 +12,16 @@ export const metadata: Metadata = {
     "Proyecto final de Herramientas Computacionales: tres fuentes de datos, limpieza con PySpark, PostgreSQL, ANOVA y un dashboard de Power BI.",
 };
 
-export const viewport: Viewport = { themeColor: "#1A1A1A" };
+export const viewport: Viewport = { themeColor: "#FAF7F2" };
+
+const TEMA_INICIAL = `(function(){try{var t=localStorage.getItem("tema");if(t==="claro"||t==="oscuro"){document.documentElement.setAttribute("data-tema",t);}}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${sora.variable} ${inter.variable}`}>
+    <html lang="es" data-tema="claro" suppressHydrationWarning className={`${sora.variable} ${inter.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: TEMA_INICIAL }} />
+      </head>
       <body>
         <Navegacion />
         {children}

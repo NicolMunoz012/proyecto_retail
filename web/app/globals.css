@@ -134,6 +134,46 @@ main {
   text-decoration: none;
 }
 
+.barra__derecha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.barra__tema {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--texto-2);
+  cursor: pointer;
+  transition: color var(--rapida), border-color var(--rapida);
+}
+
+.barra__tema:hover {
+  color: var(--texto);
+  border-color: var(--barra);
+}
+
+.barra__tema .icono-sol,
+.barra__tema .icono-luna {
+  display: none;
+}
+
+[data-tema="claro"] .barra__tema .icono-luna {
+  display: block;
+}
+
+[data-tema="oscuro"] .barra__tema .icono-sol {
+  display: block;
+}
+
 .barra ul {
   display: flex;
   gap: 4px;
@@ -740,6 +780,15 @@ main {
     padding-inline: 6px;
   }
 
+  .barra__derecha {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .barra__derecha ul {
+    flex: 1;
+  }
+
   .barra ul {
     gap: 0;
   }
@@ -823,4 +872,42 @@ main {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Imágenes del ANOVA por tema */
+.anova__panel .img-tema-claro {
+  display: none;
+}
+
+[data-tema="claro"] .anova__panel .img-tema-claro {
+  display: block;
+}
+
+[data-tema="claro"] .anova__panel .img-tema-oscuro {
+  display: none;
+}
+
+.dashboard__pie a,
+.cierre__enlaces a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+::selection {
+  background: var(--salmon);
+  color: var(--fondo);
+}
+
+/* Tema claro */
+:root[data-tema="claro"] {
+  color-scheme: light;
+  --fondo: #faf7f2;
+  --texto: #1d1b19;
+  --texto-2: #6f675f;
+  --salmon: #a05f2c;
+  --rosa: #b85c66;
+  --vino: #9e3d47;
+  --linea: #e2dbd2;
+  --barra: #a39a90;
 }
