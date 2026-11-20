@@ -1,0 +1,287 @@
+{
+  "generado": "2026-11-19",
+  "totales": {
+    "ventas": 9838141.37,
+    "pedidos": 303,
+    "paises": 19,
+    "ventaPorPedido": 32469.11343234323,
+    "margen": 0.45847732619032294,
+    "cancelados": 4,
+    "desde": "2003-01",
+    "hasta": "2005-05"
+  },
+  "fuentes": {
+    "lineasKaggle": 2823,
+    "clientes": 122,
+    "productos": 110,
+    "paisesBancoMundial": 27
+  },
+  "validaciones": {
+    "total": 36,
+    "ok": 36
+  },
+  "regiones": [
+    {
+      "region": "EMEA",
+      "pedidos": 148,
+      "ventas": 4830142.59,
+      "ventaPorPedido": 32636.09858108108
+    },
+    {
+      "region": "Norteamérica",
+      "pedidos": 118,
+      "ventas": 3806703.73,
+      "ventaPorPedido": 32260.201101694915
+    },
+    {
+      "region": "APAC",
+      "pedidos": 23,
+      "ventas": 746121.83,
+      "ventaPorPedido": 32440.07956521739
+    },
+    {
+      "region": "Japón",
+      "pedidos": 14,
+      "ventas": 455173.22,
+      "ventaPorPedido": 32512.372857142855
+    }
+  ],
+  "meses": [
+    {
+      "mes": "2003-01",
+      "ventas": 129753.6,
+      "pedidos": 5
+    },
+    {
+      "mes": "2003-02",
+      "ventas": 140836.19,
+      "pedidos": 3
+    },
+    {
+      "mes": "2003-03",
+      "ventas": 174504.9,
+      "pedidos": 6
+    },
+    {
+      "mes": "2003-04",
+      "ventas": 201609.55,
+      "pedidos": 7
+    },
+    {
+      "mes": "2003-05",
+      "ventas": 192673.11,
+      "pedidos": 6
+    },
+    {
+      "mes": "2003-06",
+      "ventas": 168082.56,
+      "pedidos": 6
+    },
+    {
+      "mes": "2003-07",
+      "ventas": 187731.88,
+      "pedidos": 6
+    },
+    {
+      "mes": "2003-08",
+      "ventas": 197809.3,
+      "pedidos": 5
+    },
+    {
+      "mes": "2003-09",
+      "ventas": 263973.36,
+      "pedidos": 8
+    },
+    {
+      "mes": "2003-10",
+      "ventas": 519580.05,
+      "pedidos": 16
+    },
+    {
+      "mes": "2003-11",
+      "ventas": 1029837.66,
+      "pedidos": 28
+    },
+    {
+      "mes": "2003-12",
+      "ventas": 261876.46,
+      "pedidos": 7
+    },
+    {
+      "mes": "2004-01",
+      "ventas": 316577.42,
+      "pedidos": 8
+    },
+    {
+      "mes": "2004-02",
+      "ventas": 311419.53,
+      "pedidos": 10
+    },
+    {
+      "mes": "2004-03",
+      "ventas": 205733.73,
+      "pedidos": 7
+    },
+    {
+      "mes": "2004-04",
+      "ventas": 206148.12,
+      "pedidos": 10
+    },
+    {
+      "mes": "2004-05",
+      "ventas": 228080.73,
+      "pedidos": 7
+    },
+    {
+      "mes": "2004-06",
+      "ventas": 186255.32,
+      "pedidos": 8
+    },
+    {
+      "mes": "2004-07",
+      "ventas": 327144.09,
+      "pedidos": 10
+    },
+    {
+      "mes": "2004-08",
+      "ventas": 461501.27,
+      "pedidos": 12
+    },
+    {
+      "mes": "2004-09",
+      "ventas": 320750.91,
+      "pedidos": 12
+    },
+    {
+      "mes": "2004-10",
+      "ventas": 552924.25,
+      "pedidos": 13
+    },
+    {
+      "mes": "2004-11",
+      "ventas": 1089048.01,
+      "pedidos": 33
+    },
+    {
+      "mes": "2004-12",
+      "ventas": 372802.66,
+      "pedidos": 11
+    },
+    {
+      "mes": "2005-01",
+      "ventas": 339543.42,
+      "pedidos": 12
+    },
+    {
+      "mes": "2005-02",
+      "ventas": 358186.18,
+      "pedidos": 12
+    },
+    {
+      "mes": "2005-03",
+      "ventas": 374262.76,
+      "pedidos": 12
+    },
+    {
+      "mes": "2005-04",
+      "ventas": 261633.29,
+      "pedidos": 9
+    },
+    {
+      "mes": "2005-05",
+      "ventas": 457861.06,
+      "pedidos": 14
+    }
+  ],
+  "lineas": [
+    {
+      "linea": "Classic Cars",
+      "ventas": 3860372.85,
+      "margen": 0.431032505059712
+    },
+    {
+      "linea": "Vintage Cars",
+      "ventas": 1865086.95,
+      "margen": 0.4898798632417647
+    },
+    {
+      "linea": "Motorcycles",
+      "ventas": 1166388.34,
+      "margen": 0.4899776604419759
+    },
+    {
+      "linea": "Trucks and Buses",
+      "ventas": 1127789.84,
+      "margen": 0.45944886327402984
+    },
+    {
+      "linea": "Planes",
+      "ventas": 939570.86,
+      "margen": 0.45980225482940157
+    },
+    {
+      "linea": "Ships",
+      "ventas": 657771.48,
+      "margen": 0.4637375886227235
+    },
+    {
+      "linea": "Trains",
+      "ventas": 221161.05,
+      "margen": 0.4803462454170841
+    }
+  ],
+  "anova": [
+    {
+      "analisis": "Región",
+      "pregunta": "¿La venta por pedido difiere entre regiones?",
+      "variable": "Venta total del pedido",
+      "n": 303,
+      "grupos": 4,
+      "unidad": "pedido",
+      "prueba": "Kruskal-Wallis",
+      "estadistico": "H = 0,095",
+      "p": 0.9924779341153231,
+      "rechaza": false,
+      "imagen": "anova/region_boxplot.png"
+    },
+    {
+      "analisis": "País",
+      "pregunta": "¿La venta por pedido difiere entre países?",
+      "variable": "Venta total del pedido",
+      "n": 214,
+      "grupos": 5,
+      "unidad": "pedido",
+      "prueba": "Kruskal-Wallis",
+      "estadistico": "H = 1,211",
+      "p": 0.876347538456177,
+      "rechaza": false,
+      "imagen": "anova/pais_boxplot.png"
+    },
+    {
+      "analisis": "Oficina",
+      "pregunta": "¿La venta por pedido difiere entre canales (oficinas)?",
+      "variable": "Venta total del pedido",
+      "n": 303,
+      "grupos": 7,
+      "unidad": "pedido",
+      "prueba": "ANOVA de Welch",
+      "estadistico": "F = 0,073",
+      "p": 0.99839505765224,
+      "rechaza": false,
+      "imagen": "anova/oficina_boxplot.png"
+    },
+    {
+      "analisis": "Margen por línea",
+      "pregunta": "¿El margen difiere entre líneas de producto?",
+      "variable": "Margen % del producto",
+      "n": 109,
+      "grupos": 7,
+      "unidad": "producto",
+      "prueba": "ANOVA clásico",
+      "estadistico": "F = 1,199",
+      "p": 0.3128266348307972,
+      "rechaza": false,
+      "imagen": "anova/margen_linea_boxplot.png"
+    }
+  ]
+}
