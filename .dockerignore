@@ -1,0 +1,21 @@
+.git
+.gitignore
+**/__pycache__
+**/*.py[cod]
+venv
+.venv
+config/.env
+**/kaggle.json
+
+# Datos generados (se montan en tiempo de ejecución)
+data/raw
+data/staging
+data/processed
+data/anova
+data/sources
+
+# Web: dependencias y salidas
+web/node_modules
+web/.next
+web/out
+web/next-env.d.ts

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel ETL · Retail</title>
+  <link rel="stylesheet" href="/static/estilos.css?v=2">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="marca">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="28" height="28" role="presentation">
+          <rect x="7" y="17" width="4" height="8" rx="1" fill="#8C8780" />
+          <rect x="14" y="13" width="4" height="12" rx="1" fill="#8C8780" />
+          <rect x="21" y="7" width="4" height="18" rx="1" fill="#E1C0A0" />
+        </svg>
+      </span>
+      <div>
+        <h1>Panel de control</h1>
+        <p>Ventas retail · Kaggle + classicmodels + Banco Mundial</p>
+      </div>
+    </div>
+    <nav class="navegacion">
+      <a class="btn btn-secundario" href="{{ web_url }}" target="_blank" rel="noopener">
+        Abrir página web ↗
+      </a>
+      {% if pbix %}
+      <a class="btn btn-secundario" href="/api/pbix">Descargar Power BI</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main>
+    <section class="tarjeta control">
+      <div class="estado">
+        <span id="punto" class="punto inactivo"></span>
+        <div>
+          <h2 id="estado-texto">En espera</h2>
+          <p id="estado-detalle">Elige el origen de datos y pulsa «Ejecutar ETL».</p>
+        </div>
+      </div>
+
+      <div class="acciones">
+        <label class="campo">
+          <span>Origen de los datos</span>
+          <select id="modo">
+            <option value="cache">Caché local (data/raw, sin descargar)</option>
+            <option value="completo">Completo (descarga las tres fuentes)</option>
+          </select>
+        </label>
+        <div class="botones">
+          <button id="btn-ejecutar" class="btn btn-primario">▶ Ejecutar ETL</button>
+          <button id="btn-validar" class="btn btn-secundario">Validar base</button>
+          <button id="btn-cancelar" class="btn btn-peligro" hidden>Cancelar</button>
+        </div>
+      </div>
+
+      <p id="aviso" class="aviso" hidden></p>
+    </section>
+
+    <section class="rejilla">
+      <div class="tarjeta">
+        <div class="titulo-fila">
+          <h3>Progreso</h3>
+          <span id="tiempo" class="etiqueta">—</span>
+        </div>
+        <div class="barra"><div id="barra"></div></div>
+        <ol class="pasos">
+          <li data-paso="1"><span>1</span> Extracción</li>
+          <li data-paso="2"><span>2</span> Transformación</li>
+          <li data-paso="3"><span>3</span> Carga</li>
+          <li data-paso="4"><span>4</span> Validaciones</li>
+        </ol>
+        <div class="resumen">
+          <div><strong id="num-ok">0</strong><span>controles OK</span></div>
+          <div><strong id="num-error">0</strong><span>con ERROR</span></div>
+          <div><strong id="num-tablas">0</strong><span>tablas cargadas</span></div>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <div class="titulo-fila">
+          <h3>Estado de la base</h3>
+          <span id="base-punto" class="punto mini inactivo"></span>
+        </div>
+        <div id="base-datos" class="datos-base">
+          <p class="tenue">Consultando PostgreSQL…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="titulo-fila">
+        <h3>Registro de ejecución</h3>
+        <div class="log-acciones">
+          <span id="log-nombre" class="etiqueta">sin ejecuciones</span>
+          <a id="descargar-log" class="enlace" href="/api/log/descargar">Descargar log</a>
+        </div>
+      </div>
+      <pre id="log" class="consola"><span class="tenue">Aquí aparecerá la salida del ETL en vivo.</span></pre>
+    </section>
+
+    <section class="tarjeta nota">
+      <h3>Qué hace cada botón</h3>
+      <ul>
+        <li><strong>Caché local:</strong> usa los archivos ya descargados en <code>data/raw</code>. Es la opción rápida para probar el pipeline.</li>
+        <li><strong>Completo:</strong> borra <code>data/raw</code> y vuelve a descargar Kaggle, classicmodels y el Banco Mundial. Necesita credenciales de Kaggle.</li>
+        <li><strong>Validar base:</strong> ejecuta los 36 controles de <code>sql/05_validaciones.sql</code> sobre la base ya cargada.</li>
+        <li><strong>Abrir página web:</strong> lleva al sitio estático del proyecto (contenedor <code>web</code>).</li>
+      </ul>
+      <p class="tenue">El ETL recrea los esquemas <code>stg</code>, <code>core</code> y <code>bi</code> en cada corrida. La carga es transaccional: si falla, no deja datos a medias.</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>Proyecto final de Herramientas · panel de despliegue local</span>
+    <span id="version-base"></span>
+  </footer>
+
+  <script src="/static/app.js?v=2"></script>
+</body>
+</html>
