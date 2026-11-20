@@ -1,0 +1,41 @@
+-- Cifras de control de la Parte C del plan (C.1 y C.2).
+SELECT 'C.1' AS seccion, 'territorio (stg)' AS control, 4::numeric AS esperado,
+       (SELECT count(*) FROM stg.territorio)::numeric AS obtenido
+UNION ALL SELECT 'C.1', 'territorio (core)', 4, (SELECT count(*) FROM core.territorio)
+UNION ALL SELECT 'C.1', 'pais (stg)', 27, (SELECT count(*) FROM stg.pais)
+UNION ALL SELECT 'C.1', 'pais (core)', 27, (SELECT count(*) FROM core.pais)
+UNION ALL SELECT 'C.1', 'pais sin capital', 2, (SELECT count(*) FROM core.pais WHERE capital IS NULL)
+UNION ALL SELECT 'C.1', 'indicador_pais (stg)', 81, (SELECT count(*) FROM stg.indicador_pais)
+UNION ALL SELECT 'C.1', 'indicador_pais (core)', 81, (SELECT count(*) FROM core.indicador_pais)
+UNION ALL SELECT 'C.1', 'oficina (stg)', 7, (SELECT count(*) FROM stg.oficina)
+UNION ALL SELECT 'C.1', 'oficina (core)', 7, (SELECT count(*) FROM core.oficina)
+UNION ALL SELECT 'C.1', 'empleado (stg)', 23, (SELECT count(*) FROM stg.empleado)
+UNION ALL SELECT 'C.1', 'empleado (core)', 23, (SELECT count(*) FROM core.empleado)
+UNION ALL SELECT 'C.1', 'empleado sin jefe', 1, (SELECT count(*) FROM core.empleado WHERE id_jefe IS NULL)
+UNION ALL SELECT 'C.1', 'cliente (stg)', 122, (SELECT count(*) FROM stg.cliente)
+UNION ALL SELECT 'C.1', 'cliente (core)', 122, (SELECT count(*) FROM core.cliente)
+UNION ALL SELECT 'C.1', 'cliente sin representante', 22,
+                 (SELECT count(*) FROM core.cliente WHERE id_representante IS NULL)
+UNION ALL SELECT 'C.1', 'linea_producto (stg)', 7, (SELECT count(*) FROM stg.linea_producto)
+UNION ALL SELECT 'C.1', 'linea_producto (core)', 7, (SELECT count(*) FROM core.linea_producto)
+UNION ALL SELECT 'C.1', 'producto (stg)', 110, (SELECT count(*) FROM stg.producto)
+UNION ALL SELECT 'C.1', 'producto (core)', 110, (SELECT count(*) FROM core.producto)
+UNION ALL SELECT 'C.1', 'estado_pedido (stg)', 6, (SELECT count(*) FROM stg.estado_pedido)
+UNION ALL SELECT 'C.1', 'estado_pedido (core)', 6, (SELECT count(*) FROM core.estado_pedido)
+UNION ALL SELECT 'C.1', 'pedido (stg)', 307, (SELECT count(*) FROM stg.pedido)
+UNION ALL SELECT 'C.1', 'pedido (core)', 307, (SELECT count(*) FROM core.pedido)
+UNION ALL SELECT 'C.1', 'pedido sin fecha de envío', 13,
+                 (SELECT count(*) FROM core.pedido WHERE fecha_envio IS NULL)
+UNION ALL SELECT 'C.1', 'detalle_pedido (stg)', 2823, (SELECT count(*) FROM stg.detalle_pedido)
+UNION ALL SELECT 'C.1', 'detalle_pedido (core)', 2823, (SELECT count(*) FROM core.detalle_pedido)
+UNION ALL SELECT 'C.1', 'pago (stg)', 273, (SELECT count(*) FROM stg.pago)
+UNION ALL SELECT 'C.1', 'pago (core)', 273, (SELECT count(*) FROM core.pago)
+UNION ALL SELECT 'C.1', 'pago: suma de monto', 8853839.23, (SELECT sum(monto) FROM core.pago)
+UNION ALL SELECT 'C.2', 'bi.dim_fecha', 1096, (SELECT count(*) FROM bi.dim_fecha)
+UNION ALL SELECT 'C.2', 'bi.fact_ventas', 2763, (SELECT count(*) FROM bi.fact_ventas)
+UNION ALL SELECT 'C.2', 'bi.fact_ventas: suma de Venta', 9838141.37, (SELECT sum("Venta") FROM bi.fact_ventas)
+UNION ALL SELECT 'C.2', 'bi.fact_pedidos', 303, (SELECT count(*) FROM bi.fact_pedidos)
+UNION ALL SELECT 'C.2', 'bi.fact_pedidos con fecha de envío', 293,
+                 (SELECT count(*) FROM bi.fact_pedidos WHERE "Fecha Envío" IS NOT NULL)
+UNION ALL SELECT 'C.2', 'bi.fact_pagos', 273, (SELECT count(*) FROM bi.fact_pagos)
+UNION ALL SELECT 'C.2', 'bi.fact_indicadores', 81, (SELECT count(*) FROM bi.fact_indicadores);
