@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel ETL · Retail</title>
+  <script>
+    (function () {
+      try {
+        var tema = localStorage.getItem("tema-panel");
+        if (tema === "claro" || tema === "oscuro") {
+          document.documentElement.setAttribute("data-tema", tema);
+        }
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="/static/estilos.css?v=5">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="marca">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="28" height="28" role="presentation">
+          <rect x="7" y="17" width="4" height="8" rx="1" fill="var(--barra)" />
+          <rect x="14" y="13" width="4" height="12" rx="1" fill="var(--barra)" />
+          <rect x="21" y="7" width="4" height="18" rx="1" fill="var(--salmon)" />
+        </svg>
+      </span>
+      <div>
+        <h1>Panel de control</h1>
+        <p>Ventas retail · Kaggle + classicmodels + Banco Mundial</p>
+      </div>
+    </div>
+    <nav class="navegacion">
+      <a class="btn btn-secundario" href="{{ web_url }}" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+          <path d="M15 3h6v6" /><path d="M10 14 21 3" />
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        </svg>
+        Abrir página web
+      </a>
+      {% if pbix %}
+      <a class="btn btn-secundario" href="/api/pbix">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <path d="m7 10 5 5 5-5" /><path d="M12 15V3" />
+        </svg>
+        Descargar Power BI
+      </a>
+      {% endif %}
+      <button id="btn-ayuda" class="btn btn-secundario" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+          <path d="M12 17h.01" />
+        </svg>
+        Ayuda
+      </button>
+      <button id="btn-tema" class="btn-tema" type="button" aria-label="Cambiar a tema oscuro"
+              title="Cambiar a tema oscuro">
+        <svg class="icono-sol" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+             fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" /><path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />
+        </svg>
+        <svg class="icono-luna" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+             fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="tarjeta control">
+      <div class="estado">
+        <span id="punto" class="punto inactivo"></span>
+        <div>
+          <h2 id="estado-texto">En espera</h2>
+          <p id="estado-detalle">Elige el origen de datos y pulsa «Ejecutar ETL».</p>
+        </div>
+      </div>
+
+      <div class="acciones">
+        <label class="campo">
+          <span>Origen de los datos</span>
+          <select id="modo">
+            <option value="cache">Caché local (data/raw, sin descargar)</option>
+            <option value="completo">Completo (descarga las tres fuentes)</option>
+          </select>
+        </label>
+        <div class="botones">
+          <button id="btn-ejecutar" class="btn btn-primario">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" focusable="false">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Ejecutar ETL
+          </button>
+          <button id="btn-validar" class="btn btn-secundario">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" focusable="false">
+              <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+            Validar base
+          </button>
+          <button id="btn-limpiar" class="btn btn-peligro">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" focusable="false">
+              <path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              <path d="M10 11v6" /><path d="M14 11v6" />
+            </svg>
+            Limpiar base
+          </button>
+          <button id="btn-cancelar" class="btn btn-peligro" hidden>Cancelar</button>
+        </div>
+      </div>
+
+      <p id="aviso" class="aviso" hidden></p>
+    </section>
+
+    <section class="rejilla">
+      <div class="tarjeta">
+        <div class="titulo-fila">
+          <h3>Progreso</h3>
+          <span id="tiempo" class="etiqueta">—</span>
+        </div>
+        <div class="barra"><div id="barra"></div></div>
+        <ol class="pasos">
+          <li data-paso="1"><span>1</span> Extracción</li>
+          <li data-paso="2"><span>2</span> Transformación</li>
+          <li data-paso="3"><span>3</span> Carga</li>
+          <li data-paso="4"><span>4</span> Validaciones</li>
+        </ol>
+        <div class="resumen">
+          <div><strong id="num-ok">0</strong><span>controles OK</span></div>
+          <div><strong id="num-error">0</strong><span>con ERROR</span></div>
+          <div><strong id="num-tablas">0</strong><span>tablas cargadas</span></div>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <div class="titulo-fila">
+          <h3>Estado de la base</h3>
+          <span id="base-punto" class="punto mini inactivo"></span>
+        </div>
+        <div id="base-datos" class="datos-base">
+          <p class="tenue">Consultando PostgreSQL…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="titulo-fila">
+        <h3>Registro de ejecución</h3>
+        <div class="log-acciones">
+          <span id="log-nombre" class="etiqueta">sin ejecuciones</span>
+          <a id="descargar-log" class="enlace" href="/api/log/descargar">Descargar log</a>
+        </div>
+      </div>
+      <pre id="log" class="consola"><span class="tenue">Aquí aparecerá la salida del ETL en vivo.</span></pre>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>Proyecto final de Herramientas · panel de despliegue local</span>
+    <span id="version-base"></span>
+  </footer>
+
+  <dialog id="modal-ayuda" class="modal modal-ayuda">
+    <h3>Qué hace cada botón</h3>
+    <ul>
+      <li><strong>Caché local:</strong> usa los archivos ya descargados en <code>data/raw</code>. Es la opción rápida para probar el pipeline.</li>
+      <li><strong>Completo:</strong> borra <code>data/raw</code> y vuelve a descargar Kaggle, classicmodels y el Banco Mundial. Necesita credenciales de Kaggle.</li>
+      <li><strong>Validar base:</strong> ejecuta los 36 controles de <code>sql/05_validaciones.sql</code> sobre la base ya cargada.</li>
+      <li><strong>Limpiar base:</strong> elimina los esquemas <code>stg</code>, <code>core</code>, <code>bi</code>, <code>analisis</code> y <code>meta</code>. La próxima ejecución del ETL los vuelve a crear. Pide confirmación antes de borrar.</li>
+      <li><strong>Abrir página web:</strong> lleva al sitio estático del proyecto (contenedor <code>web</code>).</li>
+    </ul>
+    <p class="tenue">El ETL recrea los esquemas <code>stg</code>, <code>core</code> y <code>bi</code> en cada corrida. La carga es transaccional: si falla, no deja datos a medias.</p>
+    <div class="modal-acciones">
+      <button type="button" id="cerrar-ayuda" class="btn btn-secundario">Cerrar</button>
+    </div>
+  </dialog>
+
+  <dialog id="modal-limpiar" class="modal">
+    <h3>Limpiar la base de datos</h3>
+    <p>
+      Se eliminarán los esquemas <code>stg</code>, <code>core</code>, <code>bi</code>,
+      <code>analisis</code> y <code>meta</code>. La próxima ejecución del ETL los vuelve a crear.
+    </p>
+    <p class="tenue">La página web seguirá mostrando las cifras anteriores hasta que vuelvas a cargar la base.</p>
+    <div class="modal-campo">
+      <label for="confirmar-limpiar">Escribe <strong>LIMPIAR</strong> para confirmar</label>
+      <input id="confirmar-limpiar" autocomplete="off" spellcheck="false" placeholder="LIMPIAR">
+    </div>
+    <div class="modal-acciones">
+      <button type="button" id="cancelar-limpiar" class="btn btn-secundario">Cancelar</button>
+      <button type="button" id="confirmar-limpiar-btn" class="btn btn-peligro" disabled>Limpiar base</button>
+    </div>
+  </dialog>
+
+  <script src="/static/app.js?v=5"></script>
+</body>
+</html>

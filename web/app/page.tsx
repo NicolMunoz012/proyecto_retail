@@ -1,4 +1,6 @@
 import Anova from "@/components/Anova";
+import GraficoMargen from "@/components/GraficoMargen";
+import { Barras, BaseDatos, Capas, Descarga, EnlaceExterno, Flujo } from "@/components/Iconos";
 import GraficoMeses from "@/components/GraficoMeses";
 import GraficoRegiones from "@/components/GraficoRegiones";
 import {
@@ -15,7 +17,7 @@ import {
   REPO_URL,
 } from "@/lib/datos";
 
-const { totales, fuentes, validaciones, regiones, meses, anova } = datos;
+const { totales, fuentes, validaciones, regiones, meses, lineas, anova } = datos;
 const h = hallazgos();
 const mesTexto = (aaaamm: string) => `${MESES[Number(aaaamm.slice(5)) - 1]} de ${aaaamm.slice(0, 4)}`;
 const veces = fmtDecimal(h.veces, 1);
@@ -71,49 +73,77 @@ export default function Pagina() {
 
       <Seccion id="datos" n="02" titulo="Los datos">
         <p className="lectura">
-          Cruzamos tres fuentes por pedido, cliente, producto y país, y dejamos fuera los {totales.cancelados} pedidos
-          cancelados.
+          Cruzamos tres fuentes por pedido, cliente, producto y país, y dejamos fuera los{" "}
+          {totales.cancelados} pedidos cancelados. El pipeline tiene cuatro etapas y cada una se puede
+          verificar por separado.
         </p>
-        <ol className="recorrido">
+
+        <ol className="pipeline">
           <li>
-            <p className="recorrido__paso">Fuentes</p>
+            <span className="pipeline__icono" aria-hidden="true">
+              <BaseDatos />
+            </span>
+            <p className="pipeline__paso">01 · Fuentes</p>
+            <h3>Tres orígenes</h3>
             <ul className="fuentes">
               <li>
-                <strong>Ventas</strong> <span>Kaggle · CSV</span>
-                <em>{fmtEntero(fuentes.lineasKaggle)} líneas de pedido</em>
+                <strong>Kaggle</strong>
+                <span>CSV · {fmtEntero(fuentes.lineasKaggle)} líneas de pedido</span>
               </li>
               <li>
-                <strong>Base de la empresa</strong> <span>classicmodels · SQL</span>
-                <em>
-                  {fmtEntero(fuentes.clientes)} clientes y {fmtEntero(fuentes.productos)} productos
-                </em>
+                <strong>classicmodels</strong>
+                <span>
+                  SQL · {fmtEntero(fuentes.clientes)} clientes y {fmtEntero(fuentes.productos)} productos
+                </span>
               </li>
               <li>
-                <strong>Países</strong> <span>Banco Mundial · JSON</span>
-                <em>{fmtEntero(fuentes.paisesBancoMundial)} países</em>
+                <strong>Banco Mundial</strong>
+                <span>JSON · {fmtEntero(fuentes.paisesBancoMundial)} países</span>
               </li>
             </ul>
           </li>
           <li>
-            <p className="recorrido__paso">Limpieza y cruce</p>
-            <strong>PySpark</strong>
+            <span className="pipeline__icono" aria-hidden="true">
+              <Flujo />
+            </span>
+            <p className="pipeline__paso">02 · Limpieza</p>
+            <h3>PySpark</h3>
+            <p>Limpieza, deduplicación y cruce por claves de negocio.</p>
           </li>
           <li>
-            <p className="recorrido__paso">Base de datos</p>
-            <strong>PostgreSQL</strong>
-            <span>modelo normalizado y vistas en estrella</span>
+            <span className="pipeline__icono" aria-hidden="true">
+              <Capas />
+            </span>
+            <p className="pipeline__paso">03 · Modelo</p>
+            <h3>PostgreSQL</h3>
+            <p>
+              <code>stg</code> → <code>core</code> → <code>bi</code>: 12 tablas normalizadas y vistas en
+              estrella.
+            </p>
           </li>
           <li>
-            <p className="recorrido__paso">Resultados</p>
-            <strong>Power BI</strong>
-            <strong>ANOVA</strong>
+            <span className="pipeline__icono" aria-hidden="true">
+              <Barras />
+            </span>
+            <p className="pipeline__paso">04 · Análisis</p>
+            <h3>Power BI + ANOVA</h3>
+            <p>Dashboard interactivo y pruebas de hipótesis sobre las vistas.</p>
           </li>
         </ol>
-        <p className="nota">{validaciones.total} validaciones automáticas en cada ejecución.</p>
+
+        <p className="nota">
+          Cada ejecución corre {validaciones.total} validaciones automáticas; la carga es transaccional.
+        </p>
       </Seccion>
 
       <Seccion id="hallazgos" n="03" titulo="Lo que encontramos">
+        <p className="lectura">
+          Leímos los datos en tres cortes: región, mes y línea de producto. Cada uno responde una
+          pregunta distinta sobre las mismas cifras verificadas.
+        </p>
+
         <article className="hallazgo">
+          <p className="hallazgo__n">Hallazgo 01</p>
           <h3>Más pedidos, no pedidos más grandes</h3>
           <p className="lectura">
             {h.mayor.region} hizo {fmtEntero(h.mayor.pedidos)} pedidos y {h.menor.region}, {fmtEntero(h.menor.pedidos)}.
@@ -125,6 +155,7 @@ export default function Pagina() {
         </article>
 
         <article className="hallazgo">
+          <p className="hallazgo__n">Hallazgo 02</p>
           <h3>Noviembre vale por un trimestre</h3>
           <p className="lectura">
             En {h.aniosCompletos.join(" y ")}, noviembre trajo el {fmtPct(h.partNoviembre)} % de las ventas del año. Es
@@ -136,6 +167,7 @@ export default function Pagina() {
         </article>
 
         <article className="hallazgo">
+          <p className="hallazgo__n">Hallazgo 03</p>
           <h3>La línea que más vende es la que menos gana</h3>
           <p className="lectura">
             Los {LINEAS[h.lineaPrincipal.linea]} son el {fmtPct(h.partLinea)} % de las ventas y dejan el margen más
@@ -143,6 +175,7 @@ export default function Pagina() {
             {h.margenMax.map((l) => LINEAS[l.linea]).join(" y ")} llegan a {fmtPct(h.margenMax[0].margen)} %. El
             margen de toda la empresa es {fmtPct(totales.margen, 1)} %.
           </p>
+          <GraficoMargen lineas={lineas} destacada={h.lineaPrincipal.linea} />
         </article>
       </Seccion>
 
@@ -161,6 +194,14 @@ export default function Pagina() {
       </Seccion>
 
       <Seccion id="dashboard" n="05" titulo="El dashboard">
+        <div className="dashboard__cabecera">
+          <p className="lectura">
+            El tablero completo, con ventas, pedidos, pagos e indicadores por país.
+          </p>
+          <a className="dashboard__enlace" href={POWERBI_URL} target="_blank" rel="noopener">
+            Abrir en Power BI <EnlaceExterno />
+          </a>
+        </div>
         <div className="dashboard">
           <iframe
             src={POWERBI_URL}
@@ -170,30 +211,37 @@ export default function Pagina() {
           />
         </div>
         <p className="dashboard__pie">
-          <a href={POWERBI_URL} target="_blank" rel="noopener">
-            Abrir en pantalla completa ↗
-          </a>
+          <span>Dashboard interactivo publicado en Power BI.</span>
           <span className="solo-movil">En el celular se lee mejor en pantalla completa.</span>
         </p>
       </Seccion>
 
       <footer className="cierre">
-        <h2>Límites</h2>
-        <p>
-          Es un conjunto de datos de práctica de una empresa ficticia. {h.ultimoAnio} llega solo hasta{" "}
-          {MESES[h.ultimoMes - 1]}, así que los años se comparan con los mismos meses. La prueba por país deja fuera a
-          los {h.paisesFuera} países con pocos pedidos.
-        </p>
-
-        <h2>Equipo</h2>
-        <p>Nicol Juliet Muñoz Ome y Elier Fernando Rosero Bravo</p>
-
-        <p className="cierre__enlaces">
-          <a href={REPO_URL} target="_blank" rel="noopener">
-            Ver el código ↗
-          </a>
-          <a href={PBIX_URL}>Descargar el .pbix</a>
-        </p>
+        <div className="cierre__grid">
+          <div>
+            <h2>Límites</h2>
+            <p>
+              Es un conjunto de datos de práctica de una empresa ficticia. {h.ultimoAnio} llega solo hasta{" "}
+              {MESES[h.ultimoMes - 1]}, así que los años se comparan con los mismos meses. La prueba por país
+              deja fuera a los {h.paisesFuera} países con pocos pedidos.
+            </p>
+          </div>
+          <div>
+            <h2>Equipo</h2>
+            <p>Nicol Juliet Muñoz Ome y Elier Fernando Rosero Bravo</p>
+          </div>
+          <div>
+            <h2>Enlaces</h2>
+            <p className="cierre__enlaces">
+              <a href={REPO_URL} target="_blank" rel="noopener">
+                Ver el código <EnlaceExterno />
+              </a>
+              <a href={PBIX_URL}>
+                <Descarga /> Descargar el .pbix
+              </a>
+            </p>
+          </div>
+        </div>
         <p className="nota">Cifras generadas desde PostgreSQL el {datos.generado.split("-").reverse().join("/")}.</p>
       </footer>
     </main>

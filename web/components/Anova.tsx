@@ -50,7 +50,15 @@ export default function Anova({ analisis }: { analisis: Analisis[] }) {
 
       <div className="anova__panel" id="panel-anova" role="tabpanel" aria-labelledby={`pestana-${activa}`} key={activa}>
         <img
+          className="img-tema-oscuro"
           src={`${BASE_PATH}/${a.imagen}`}
+          alt={`Diagrama de caja de ${a.variable.toLowerCase()} por grupo (${a.analisis.toLowerCase()}).${a.rechaza ? "" : " Las cajas de todos los grupos se superponen."}`}
+          width={1800}
+          height={1000}
+        />
+        <img
+          className="img-tema-claro"
+          src={`${BASE_PATH}/${a.imagen.replace("_boxplot.png", "_claro_boxplot.png")}`}
           alt={`Diagrama de caja de ${a.variable.toLowerCase()} por grupo (${a.analisis.toLowerCase()}).${a.rechaza ? "" : " Las cajas de todos los grupos se superponen."}`}
           width={1800}
           height={1000}

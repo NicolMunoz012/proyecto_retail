@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Tema from "./Tema";
 
 const ENLACES = [
   { id: "pregunta", texto: "Pregunta" },
@@ -38,15 +39,18 @@ export default function Navegacion() {
         <a className="barra__marca" href="#inicio">
           Proyecto ETL
         </a>
-        <ul>
-          {ENLACES.map((e) => (
-            <li key={e.id}>
-              <a href={`#${e.id}`} aria-current={actual === e.id ? "location" : undefined}>
-                {e.texto}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="barra__derecha">
+          <ul>
+            {ENLACES.map((e) => (
+              <li key={e.id}>
+                <a href={`#${e.id}`} aria-current={actual === e.id ? "location" : undefined}>
+                  {e.texto}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <Tema />
+        </div>
       </div>
     </nav>
   );

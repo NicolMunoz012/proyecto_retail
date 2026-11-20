@@ -1,0 +1,77 @@
+# Compose para Dokploy (producción).
+#
+# Diferencias con deploy/docker-compose.yml:
+# - No publica puertos en el host: Dokploy/Traefik enruta los dominios.
+# - data/ vive en un volumen con nombre, no en el repo (Dokploy borra el clon
+#   en cada despliegue).
+# - Las credenciales y la URL pública se definen en el panel de Dokploy.
+#
+# En Dokploy:
+#   Compose Path: ./docker-compose.dokploy.yml
+#   Dominios: panel -> puerto 8000, web -> puerto 80
+#
+# Variables de entorno (Dokploy > Environment):
+#   PG_DB, PG_USER, PG_PASSWORD, WEB_URL, KAGGLE_USERNAME, KAGGLE_KEY
+
+name: retail-etl
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${PG_DB:-retail_bi}
+      POSTGRES_USER: ${PG_USER:-retail_etl}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?define PG_PASSWORD en Dokploy}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER:-retail_etl} -d ${PG_DB:-retail_bi}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  panel:
+    build:
+      context: .
+      dockerfile: deploy/panel/Dockerfile
+    environment:
+      PG_HOST: db
+      PG_PORT: "5432"
+      PG_DB: ${PG_DB:-retail_bi}
+      PG_USER: ${PG_USER:-retail_etl}
+      PG_PASSWORD: ${PG_PASSWORD:?define PG_PASSWORD en Dokploy}
+      WEB_URL: ${WEB_URL:-https://dashboard.winup.site}
+      KAGGLE_USERNAME: ${KAGGLE_USERNAME:-}
+      KAGGLE_KEY: ${KAGGLE_KEY:-}
+      SPARK_LOCAL_IP: 127.0.0.1
+    volumes:
+      # Primer arranque: Docker copia data/reference de la imagen al volumen.
+      - etldata:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/salud')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/web/Dockerfile
+    expose:
+      - "80"
+    depends_on:
+      - panel
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  etldata:
