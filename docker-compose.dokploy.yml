@@ -42,7 +42,7 @@ services:
       PG_DB: ${PG_DB:-retail_bi}
       PG_USER: ${PG_USER:-retail_etl}
       PG_PASSWORD: ${PG_PASSWORD:?define PG_PASSWORD en Dokploy}
-      WEB_URL: ${WEB_URL:-http://localhost:8080}
+      WEB_URL: ${WEB_URL:-https://dashboard.winup.site}
       KAGGLE_USERNAME: ${KAGGLE_USERNAME:-}
       KAGGLE_KEY: ${KAGGLE_KEY:-}
       SPARK_LOCAL_IP: 127.0.0.1

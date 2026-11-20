@@ -151,14 +151,19 @@ docker-compose.dokploy.yml
    PG_DB=retail_bi
    PG_USER=retail_etl
    PG_PASSWORD=<clave larga>
-   WEB_URL=https://<dominio-de-la-web>
+   WEB_URL=https://dashboard.winup.site
    KAGGLE_USERNAME=<usuario>
    KAGGLE_KEY=<token>
    ```
 4. **Domains:**
-   - `etl.tudominio.com` → servicio `panel`, puerto `8000`
-   - `retail.tudominio.com` → servicio `web`, puerto `80`
-5. Apunta los registros DNS `A` al servidor y despliega.
+   - `etl.winup.site` → servicio `panel`, puerto `8000`
+   - `dashboard.winup.site` → servicio `web`, puerto `80`
+5. En Cloudflare crea estos registros DNS (empieza con la nube gris,
+   *DNS only*, para que Dokploy pueda emitir el certificado):
+   - `A  etl       93.127.142.206`
+   - `A  dashboard 93.127.142.206`
+6. Despliega y espera a que Traefik genere los certificados. Después puedes
+   activar el proxy de Cloudflare con SSL/TLS en **Full (strict)**.
 
 Notas:
 
