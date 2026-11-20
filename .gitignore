@@ -1,0 +1,21 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Secretos
+.env
+kaggle.json
+
+# Datos: se descargan o se generan con el pipeline.
+# Solo se versiona la tabla escrita a mano (data/reference/paises_iso.csv).
+/data/*
+!/data/reference/
+
+# Página web: dependencias y salidas de compilación
+web/node_modules/
+web/.next/
+web/out/
+web/next-env.d.ts
+web/tsconfig.tsbuildinfo

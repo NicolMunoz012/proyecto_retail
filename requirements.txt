@@ -1,0 +1,10 @@
+pyspark
+kaggle
+requests
+psycopg[binary]
+python-dotenv
+pandas
+numpy
+scipy
+statsmodels
+matplotlib
